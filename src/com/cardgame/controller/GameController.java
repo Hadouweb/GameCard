@@ -96,7 +96,7 @@ public class GameController {
 	    
 	    if (bestPlayer == null) {
 		newBestPlayer = true;
-	    } else {
+	    } else { 
 		PlayingCard pc = player.getCard(0);
 		int thisRank = pc.getRank().value();
 
