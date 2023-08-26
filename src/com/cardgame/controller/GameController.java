@@ -3,6 +3,7 @@ package com.cardgame.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.cardgame.games.GameEvaluator;
 import com.cardgame.model.Deck;
 import com.cardgame.model.Player;
 import com.cardgame.model.PlayingCard;
@@ -19,16 +20,17 @@ public class GameController {
     List<Player> players;
     Player winner;
     View view;
-    
     GameState gameState;
+    GameEvaluator evaluator;
     
-    public GameController(Deck deck, View view) {
+    public GameController(Deck deck, View view, GameEvaluator evaluator) {
 	super();
 	this.deck = deck;
 	this.view = view;
 	this.players = new ArrayList<Player>();
 	this.gameState = GameState.AddingPlayers;
 	view.setController(this);
+	this.evaluator = evaluator;
     }
     
     public void run() {
@@ -42,6 +44,8 @@ public class GameController {
 	    break;
 	case WinnerRevealed:
 	    view.promptForNewGame();
+	    break;
+	default:
 	    break;
 	}
     }
@@ -83,36 +87,7 @@ public class GameController {
     }
     
     void evaluateWinner() {
-	Player bestPlayer = null;
-	int bestRank = -1;
-	int bestSuit = -1;
-	
-	for (Player player : players) {
-	    boolean newBestPlayer = false;
-	    
-	    if (bestPlayer == null) {
-		newBestPlayer = true;
-	    } else { 
-		PlayingCard pc = player.getCard(0);
-		int thisRank = pc.getRank().value();
-
-		if (thisRank > bestRank) {
-		    newBestPlayer = true;
-		} else if (thisRank == bestRank) {
-		    if (pc.getSuit().value() > bestSuit) {
-			newBestPlayer = true;
-		    }
-		}
-	    }
-	    
-	    if (newBestPlayer) {
-		bestPlayer = player;
-		PlayingCard pc = player.getCard(0);
-		bestRank = pc.getRank().value();
-		bestSuit = pc.getSuit().value();
-	    }
-	}
-	winner = bestPlayer;
+	winner = evaluator.evaluateWinner(players);
     }
     
     void displayWinner() {
