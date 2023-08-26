@@ -5,8 +5,10 @@ import java.util.List;
 
 import com.cardgame.games.GameEvaluator;
 import com.cardgame.model.Deck;
+import com.cardgame.model.IPlayer;
 import com.cardgame.model.Player;
 import com.cardgame.model.PlayingCard;
+import com.cardgame.model.WinningPlayer;
 import com.cardgame.view.GameViewable;
 
 public class GameController {
@@ -17,8 +19,8 @@ public class GameController {
     }
     
     Deck deck;
-    List<Player> players;
-    Player winner;
+    List<IPlayer> players;
+    IPlayer winner;
     GameViewable view;
     GameState gameState;
     GameEvaluator evaluator;
@@ -27,7 +29,7 @@ public class GameController {
 	super();
 	this.deck = deck;
 	this.view = view;
-	this.players = new ArrayList<Player>();
+	this.players = new ArrayList<IPlayer>();
 	this.gameState = GameState.AddingPlayers;
 	view.setController(this);
 	this.evaluator = evaluator;
@@ -61,7 +63,7 @@ public class GameController {
 	if (gameState != GameState.CardsDealt) {
 	    deck.shuffle();
 	    int playerIndex = 1;
-	    for (Player player : players) {
+	    for (IPlayer player : players) {
 		player.addCardToHand(deck.removeTopCard());
 		view.showFaceDownCardForPlayer(playerIndex++, player.getName());
 	    }
@@ -72,7 +74,7 @@ public class GameController {
     
     public void flipCards() {
 	int playerIndex = 1;
-	for (Player player : players) {
+	for (IPlayer player : players) {
 	    PlayingCard pc = player.getCard(0);
 	    pc.flip();
 	    view.showCardForPlayer(playerIndex++, player.getName(),
@@ -87,7 +89,7 @@ public class GameController {
     }
     
     void evaluateWinner() {
-	winner = evaluator.evaluateWinner(players);
+	winner = new WinningPlayer(evaluator.evaluateWinner(players));
     }
     
     void displayWinner() {
@@ -95,7 +97,7 @@ public class GameController {
     }
     
     void rebuildDeck() {
-	for (Player player : players) {
+	for (IPlayer player : players) {
 	    deck.returnCardToDeck(player.removeCard());
 	}
     }

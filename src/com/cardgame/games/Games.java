@@ -10,6 +10,7 @@ public class Games {
 	
 	GameSwingView gsv = new GameSwingView();
 	gsv.createAndShowGUI();
+
 	GameController gc = new GameController(new Deck(), gsv, new HighCardGameEvaluator());
 	gc.run();
     }

@@ -2,10 +2,10 @@ package com.cardgame.games;
 
 import java.util.List;
 
-import com.cardgame.model.Player;
+import com.cardgame.model.IPlayer;
 
 public interface GameEvaluator {
     
-    public Player evaluateWinner(List<Player> players);
+    public IPlayer evaluateWinner(List<IPlayer> players);
     
 }
