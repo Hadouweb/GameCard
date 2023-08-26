@@ -7,7 +7,7 @@ import com.cardgame.games.GameEvaluator;
 import com.cardgame.model.Deck;
 import com.cardgame.model.Player;
 import com.cardgame.model.PlayingCard;
-import com.cardgame.view.View;
+import com.cardgame.view.GameViewable;
 
 public class GameController {
     enum GameState {
@@ -19,11 +19,11 @@ public class GameController {
     Deck deck;
     List<Player> players;
     Player winner;
-    View view;
+    GameViewable view;
     GameState gameState;
     GameEvaluator evaluator;
     
-    public GameController(Deck deck, View view, GameEvaluator evaluator) {
+    public GameController(Deck deck, GameViewable view, GameEvaluator evaluator) {
 	super();
 	this.deck = deck;
 	this.view = view;
@@ -97,6 +97,18 @@ public class GameController {
     void rebuildDeck() {
 	for (Player player : players) {
 	    deck.returnCardToDeck(player.removeCard());
+	}
+    }
+    
+    void exitGame() {
+	System.exit(0);
+    }
+
+    public void nextAction(String nextChoice) {
+	if ("+q".equals(nextChoice)) {
+	    exitGame();
+	} else {
+	    startGame();
 	}
     }
 }
